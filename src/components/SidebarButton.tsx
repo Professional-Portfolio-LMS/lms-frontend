@@ -21,8 +21,8 @@ const SidebarButton: React.FC<SidebarProps> = ({
       <Link
         className={`sidebar-button flex items-center transition-all duration-200 ease-in-out ${
           isSidebarExpanded
-            ? "py-3 px-6 gap-[36px]"
-            : "py-3 px-3 justify-center gap-0"
+            ? "py-3 px-6 gap-[36px] w-[210px]"
+            : "py-3 px-3 justify-center gap-0 w-[100px]"
         }`}
         href={href}
       >

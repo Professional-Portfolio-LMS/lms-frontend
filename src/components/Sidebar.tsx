@@ -25,7 +25,7 @@ const Sidebar = () => {
   return (
     <aside
       className={`sidebar-container transition-all duration-200 ease-in-out ${
-        isSidebarExpanded ? "w-[260px]" : "w-[130px]"
+        isSidebarExpanded ? "w-[272px]" : "w-[130px]"
       }`}
     >
       {isSidebarExpanded ? (

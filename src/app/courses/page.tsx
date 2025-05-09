@@ -1,7 +1,8 @@
-export default function Home() {
+// app/courses/page.tsx
+export default function CoursesPage() {
   return (
     <div className="p-8 text-lg leading-relaxed">
-      <h1 className="text-3xl font-bold mb-4">HOME</h1>
+      <h1 className="text-3xl font-bold mb-4">COURSES</h1>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
         habitant morbi tristique senectus et netus et malesuada fames ac turpis
