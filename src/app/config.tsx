@@ -1,7 +1,7 @@
 "use client";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { House, BookText, NotebookText, Settings, Menu } from "lucide-react";
+import { House, LibraryBig, NotebookText, Settings, Menu } from "lucide-react";
 
 const NavItems = () => {
   const pathname = usePathname();
@@ -11,9 +11,9 @@ const NavItems = () => {
   }
   return [
     { logo: <House />, label: "Home", href: "/", active: pathname === "/" },
-    { 
-      logo: <BookText />,
-      label: "My Courses",
+    {
+      logo: <LibraryBig />,
+      label: "Courses",
       href: "/courses",
       active: isNavItemActive(pathname, "/courses"),
     },

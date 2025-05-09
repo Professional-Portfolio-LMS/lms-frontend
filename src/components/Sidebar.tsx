@@ -24,21 +24,21 @@ const Sidebar = () => {
 
   return (
     <aside
-      className={`sidebar-container ${
-        isSidebarExpanded ? "w-[260px]" : "w-[120px]"
+      className={`sidebar-container transition-all duration-200 ease-in-out ${
+        isSidebarExpanded ? "w-[260px]" : "w-[130px]"
       }`}
     >
       {isSidebarExpanded ? (
         <CircleChevronLeft
           style={{ marginBottom: "20px" }}
-          size={40}
+          size={30}
           color="white"
           onClick={toggleSidebar}
         />
       ) : (
         <CircleChevronRight
           style={{ marginBottom: "20px" }}
-          size={40}
+          size={30}
           color="white"
           onClick={toggleSidebar}
         />

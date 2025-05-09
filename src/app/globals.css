@@ -52,6 +52,7 @@ body {
   color: white;
   border-radius: 10px;
   vertical-align: middle;
+  height: 70px;
 }
 
 .name-and-index-container {
@@ -72,7 +73,6 @@ body {
 .sidebar-button {
   vertical-align: middle;
   display: flex;
-  gap: 36px;
   background-color: #c2e8f8;
   color: black;
   border-radius: 13px;

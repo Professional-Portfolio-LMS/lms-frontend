@@ -13,7 +13,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   isSidebarExpanded,
 }) => {
   return (
-    <div className="profile-card-container">
+    <div className="profile-card-container flex items-center gap-3 transition-all duration-200 ease-in-out">
       <Image
         src="https://famous-mathematicians.org/wp-content/uploads/2013/07/Pythagoras-250x300.jpg"
         alt="Profile pic"
@@ -21,12 +21,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         height={50}
         className="rounded-full object-cover"
       />
-      {isSidebarExpanded && (
-        <div className="name-and-index-container">
-          <div className="text-xl">Hi, {name}</div>
-          <div className="text-sm">{indexNo}</div>
-        </div>
-      )}
+      <div
+        className={`transition-all duration-200 ease-in-out overflow-hidden ${
+          isSidebarExpanded
+            ? "opacity-100 w-auto"
+            : "opacity-0 w-0 pointer-events-none"
+        }`}
+      >
+        <div className="text-xl">Hi, {name}</div>
+        <div className="text-sm">{indexNo}</div>
+      </div>
     </div>
   );
 };
