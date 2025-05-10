@@ -22,7 +22,7 @@ const SidebarButton: React.FC<SidebarProps> = ({
         className={`sidebar-button flex items-center transition-all duration-200 ease-in-out ${
           isSidebarExpanded
             ? "py-3 px-6 gap-[36px] w-[210px]"
-            : "py-3 px-3 justify-center gap-0 w-[100px]"
+            : "py-3 px-3 justify-center gap-0 w-[60px]"
         }`}
         href={href}
       >
@@ -38,20 +38,6 @@ const SidebarButton: React.FC<SidebarProps> = ({
         </span>
       </Link>
     </li>
-
-    // <li transition-all duration-200 ease-in-out>
-    //   <Link
-    //     className={`sidebar-button ${
-    //       isSidebarExpanded ? "py-3 px-6" : "py-3 px-3 justify-center"
-    //     }`}
-    //     href={href}
-    //   >
-    //     {logo}
-    //     {isSidebarExpanded && (
-    //       <span className={`${active ? "font-bold" : ""}`}>{label}</span>
-    //     )}
-    //   </Link>
-    // </li>
   );
 };
 
