@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import SidebarButton from "./SidebarButton";
 import ProfileCard from "./ProfileCard";
-import Image from "next/image";
 import NavItems from "@/app/config";
 import { CircleChevronRight, CircleChevronLeft } from "lucide-react";
 

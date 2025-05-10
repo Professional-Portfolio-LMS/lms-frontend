@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-:root {
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -17,10 +17,10 @@
     --background: #e8f1f2;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
-  background: var(--background);
+  background: #e8f1f2;
   font-family: Arial, Helvetica, sans-serif;
   padding: 16px;
 }
@@ -76,4 +76,36 @@ body {
   background-color: #c2e8f8;
   color: black;
   border-radius: 13px;
+}
+
+.uploader-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed #1475cf;
+  height: 220px;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.uploader-div:hover {
+  background-color: #d0e8ff; /* slightly darker */
+}
+
+.uploaded-row {
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-radius: 5px;
+  background: #d2dffa;
+}
+
+.upload-content {
+  display: flex;
+  align-items: center;
 }

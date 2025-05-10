@@ -1,4 +1,3 @@
-// app/courses/page.tsx
 export default function CoursesPage() {
   return (
     <div className="p-8 text-lg leading-relaxed">

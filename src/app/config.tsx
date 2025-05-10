@@ -7,7 +7,7 @@ const NavItems = () => {
   const pathname = usePathname();
 
   function isNavItemActive(pathname: string, nav: string) {
-    return pathname.includes(nav);
+    return pathname.startsWith(nav);
   }
   return [
     { logo: <House />, label: "Home", href: "/", active: pathname === "/" },
