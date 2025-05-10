@@ -87,7 +87,10 @@ const UploaderWithDesc = () => {
         <div
           className="uploader-div"
           onClick={() => {
-            document.querySelector(".file-input")?.click();
+            const fileInput = document.querySelector(
+              ".file-input"
+            ) as HTMLInputElement | null;
+            fileInput?.click();
           }}
         >
           <input
