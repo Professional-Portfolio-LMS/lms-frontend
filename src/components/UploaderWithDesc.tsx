@@ -13,36 +13,6 @@ import {
   Trash,
 } from "lucide-react";
 
-const getIconForFileType = (ext: string | undefined) => {
-  switch (ext) {
-    case "jpg":
-    case "jpeg":
-    case "png":
-    case "gif":
-      return <FileImage />;
-    case "pdf":
-      return <FileText />; // lucide doesn't have FilePdf, so use FileText or similar
-    case "mp3":
-    case "wav":
-      return <FileAudio />;
-    case "mp4":
-    case "mov":
-      return <FileVideo />;
-    case "zip":
-    case "rar":
-      return <FileArchive />;
-    case "js":
-    case "ts":
-    case "html":
-    case "css":
-      return <FileCode />;
-    case "txt":
-      return <FileText />;
-    default:
-      return <File />; // fallback icon
-  }
-};
-
 const UploaderWithDesc = () => {
   const [file, setFile] = useState("");
   const [filename, setFilename] = useState("No file selected");
@@ -87,7 +57,10 @@ const UploaderWithDesc = () => {
         <div
           className="uploader-div"
           onClick={() => {
-            document.querySelector(".file-input")?.click();
+            const fileInput = document.querySelector(
+              ".file-input"
+            ) as HTMLInputElement | null;
+            fileInput?.click();
           }}
         >
           <input
