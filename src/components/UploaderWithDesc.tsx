@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { FormEvent, JSX, useState } from "react";
 import {
   CloudUpload,
   File,
@@ -12,8 +12,13 @@ import {
   FileCode,
   Trash,
 } from "lucide-react";
+import TextAreaField from "./TextAreaField";
 
-const UploaderWithDesc = () => {
+interface UploaderWithDescProps {
+  otherInputs?: JSX.Element[];
+}
+
+const UploaderWithDesc = ({ otherInputs = [] }: UploaderWithDescProps) => {
   const [file, setFile] = useState("");
   const [filename, setFilename] = useState("No file selected");
 
@@ -51,9 +56,26 @@ const UploaderWithDesc = () => {
     return filename.split(".").pop()?.toLowerCase();
   };
 
+  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+
+    for (let [key, value] of formData.entries()) {
+      if (value instanceof Blob) {
+        console.log(`${key}:`, (value as File).name);
+      } else {
+        console.log(`${key}:`, value);
+      }
+    }
+  }
+
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
+        {otherInputs.map((element) => {
+          return element;
+        })}
         <div
           className="uploader-div"
           onClick={() => {
@@ -66,6 +88,7 @@ const UploaderWithDesc = () => {
           <input
             className="file-input"
             type="file"
+            name="file"
             hidden
             onChange={({ target: { files } }) => {
               if (files) {
@@ -86,20 +109,33 @@ const UploaderWithDesc = () => {
         <section className="uploaded-row">
           {getIconForFileType(getFileExtension(filename))}
           <span className="upload-content">
-            {filename} -
+            {filename} &nbsp; - &nbsp;
             <Trash
+              className="cursor-pointer"
               onClick={() => {
-                setFilename("No selected file");
+                const fileInput = document.querySelector(
+                  ".file-input"
+                ) as HTMLInputElement | null;
+
+                if (fileInput) {
+                  fileInput.value = "";
+                }
+
+                setFilename("No file selected");
                 setFile("");
               }}
             />
           </span>
         </section>
-        <textarea
-          title="Comments"
-          placeholder="Your comments go here"
-          className="w-full p-2 border-2 rounded border-[#1475cf] hover:border-[#0f5ea8] focus:border-[#0f5ea8] outline-none"
-        />
+        <TextAreaField key="comments" label="Comments" name="comments" />
+        <div className="flex w-full justify-center align-middle mt-2">
+          <button
+            type="submit"
+            className="bg-[#1475cf] text-white px-5 py-2 rounded-md cursor-pointer hover:bg-[#0f5cad] active:scale-95 transition-all font-medium"
+          >
+            Submit
+          </button>
+        </div>
       </form>
     </div>
   );
