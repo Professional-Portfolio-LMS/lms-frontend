@@ -17,7 +17,7 @@ const BreadcrumbNav = () => {
     return (
       <span key={href} className="flex items-center gap-1">
         {!isLast ? (
-          <Link href={href} className="text-blue-600 hover:underline">
+          <Link href={href} className="text-[#00173d] hover:underline">
             {isNaN(Number(seg)) ? capitalize(seg) : seg}
           </Link>
         ) : (
@@ -32,7 +32,7 @@ const BreadcrumbNav = () => {
 
   return (
     <nav className="text-gray-600 flex flex-wrap items-center">
-      <Link href="/" className="text-blue-600 hover:underline">
+      <Link href="/" className="text-[#00173d] hover:underline">
         Home
       </Link>
       {segments.length > 0 && (
