@@ -84,7 +84,7 @@ body {
   justify-content: center;
   align-items: center;
   border: 2px dashed #1475cf;
-  height: 220px;
+  height: 132px;
   width: 100%;
   cursor: pointer;
   border-radius: 5px;
@@ -92,7 +92,7 @@ body {
 }
 
 .uploader-div:hover {
-  background-color: #d0e8ff; /* slightly darker */
+  background-color: #d6e8fa;
 }
 
 .uploaded-row {
