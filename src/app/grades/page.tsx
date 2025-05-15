@@ -1,23 +1,16 @@
-// app/grades/page.tsx
+import StudentGradeView from '@/components/StudentGradeView';
 
-export default function GradesPage() {
-    return (
-      <div className="p-8 text-lg leading-relaxed">
-        <h1 className="text-3xl font-bold mb-4">GRADES</h1>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
-          habitant morbi tristique senectus et netus et malesuada fames ac turpis
-          egestas. Vestibulum ante ipsum primis in faucibus orci luctus et
-          ultrices posuere cubilia curae; Nullam non scelerisque erat. Vivamus nec
-          bibendum purus. Suspendisse potenti. Aenean nec justo elit.
-        </p>
-        <p className="mt-6">
-          Quisque volutpat arcu sed nisl placerat luctus. Integer rutrum, tortor
-          sed consequat ultricies, arcu velit volutpat justo, nec ullamcorper
-          lacus odio nec tortor. Morbi quis viverra lacus. Integer bibendum nisl
-          vel ligula mattis.
-        </p>
-      </div>
-    );
-  }
-  
+const dummyGrades = [
+  { activity: 'Quiz 1', course: 'Math 101', grade: 85, remarks: 'Good work' },
+  { activity: 'Assignment 2', course: 'Physics 102', grade: 92, remarks: 'Excellent' },
+  { activity: 'Homework', course: 'Chemistry 103', grade: 76, remarks: 'Needs improvement' },
+];
+
+export default function StudentGradesPage() {
+  return (
+    <div className="p-4">
+      <h1 className="text-xl font-semibold mb-4">Your Grades</h1>
+      <StudentGradeView grades={dummyGrades} />
+    </div>
+  );
+}
