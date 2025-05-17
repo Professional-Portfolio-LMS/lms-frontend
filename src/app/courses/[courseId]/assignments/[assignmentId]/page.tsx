@@ -30,7 +30,7 @@ export default function SpecificAssignmentPage() {
   return (
     <div className="flex flex-col gap-3 max-w-6xl p-6">
       {/* Assignment Details */}
-      <div className="border-[#1475cf] border-2 p-4 rounded-lg shadow-sm">
+      <div className="border-[#00173d] border-2 p-4 rounded-lg shadow-sm">
         <h2 className="text-2xl font-bold">{assignment.title}</h2>
         <p className="text-sm text-gray-500">Due: {assignment.dueDate}</p>
         <p className="mt-4">{assignment.description}</p>

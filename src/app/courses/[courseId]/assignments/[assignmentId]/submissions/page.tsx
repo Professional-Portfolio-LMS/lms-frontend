@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import DataTable, { Column } from "@/components/DataTable";
 
 interface Submission {
   id: string;
@@ -134,52 +135,32 @@ const dummySubmissions: Submission[] = [
 ];
 
 const CourseSubmissionsPage = () => {
+  const columns: Column[] = [
+    { header: "Student Name", accessor: "studentName" },
+    { header: "Index No", accessor: "indexNumber" },
+    {
+      header: "Submitted At",
+      accessor: (row) => new Date(row.submittedAt).toLocaleString(),
+    },
+    { header: "Grade", accessor: (row) => row.grade ?? "—", numeric: true },
+    {
+      header: "Action",
+      accessor: (row) => (
+        <Link
+          href={`/courses/123/assignments/ass-1/submissions/${row.id}`}
+          className="text-[#00173d] font-medium hover:underline"
+        >
+          View →
+        </Link>
+      ),
+      numeric: true,
+    },
+  ];
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-8">
       <h1 className="text-2xl font-semibold mb-6">Student Submissions</h1>
-
-      {dummySubmissions.length === 0 ? (
-        <p className="text-gray-500">No submissions yet.</p>
-      ) : (
-        <div className="overflow-x-auto border rounded-md shadow-sm">
-          <table className="min-w-full text-sm text-left">
-            <thead className="bg-[#00173d] text-white">
-              <tr>
-                <th className="py-3 px-4">Student Name</th>
-                <th className="py-3 px-4">Index No</th>
-                <th className="py-3 px-4">Submitted At</th>
-                <th className="py-3 px-4">Grade</th>
-                <th className="py-3 px-4 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dummySubmissions.map((submission) => (
-                <tr
-                  key={submission.id}
-                  className="border-t bg-[#e8f1f2] hover:bg-[#c2e8f8]"
-                >
-                  <td className="py-3 px-4">{submission.studentName}</td>
-                  <td className="py-3 px-4">{submission.indexNumber}</td>
-                  <td className="py-3 px-4">
-                    {new Date(submission.submittedAt).toLocaleString()}
-                  </td>
-                  <td className="py-3 px-4">
-                    {submission.grade !== null ? submission.grade : "—"}
-                  </td>
-                  <td className="py-3 px-4 text-right">
-                    <Link
-                      href={`/courses/123/assignments/ass-1/submissions/${submission.id}`}
-                      className="text-[#1475cf] font-medium hover:underline"
-                    >
-                      View →
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <DataTable columns={columns} data={dummySubmissions} />
     </div>
   );
 };
