@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import AlphabetFilter from '@/components/AlphabeticFilter';
+import Pagination from '@/components/Pagination';
 import { useParams } from 'next/navigation';
 
 const dummyParticipants = [
@@ -18,12 +19,14 @@ const dummyParticipants = [
   'Karen King',
   'Liam Lee',
 ];
+const STUDENTS_PER_PAGE = 5;
 
 export default function CoursePage() {
   const params = useParams();
   const courseId = params.courseId as string;
-    const [firstNameLetter, setFirstNameLetter] = useState('');
+  const [firstNameLetter, setFirstNameLetter] = useState('');
   const [surnameLetter, setSurnameLetter] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filteredParticipants = dummyParticipants.filter((fullName) => {
     const [firstName, lastName] = fullName.split(' ');
@@ -31,6 +34,15 @@ export default function CoursePage() {
     const lastMatch = !surnameLetter || lastName?.startsWith(surnameLetter);
     return firstMatch && lastMatch;
   });
+  const totalPages = Math.ceil(filteredParticipants.length / STUDENTS_PER_PAGE);
+  const paginatedParticipants = filteredParticipants.slice(
+    (currentPage - 1) * STUDENTS_PER_PAGE,
+    currentPage * STUDENTS_PER_PAGE
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <main className="p-4">
@@ -46,7 +58,10 @@ export default function CoursePage() {
             <AlphabetFilter
               title=""
               selectedLetter={firstNameLetter}
-              onSelect={setFirstNameLetter}
+              onSelect={(letter) => {
+                setFirstNameLetter(letter);
+                setCurrentPage(1); 
+              }}
             />
           </div>
 
@@ -56,7 +71,10 @@ export default function CoursePage() {
             <AlphabetFilter
               title=""
               selectedLetter={surnameLetter}
-              onSelect={setSurnameLetter}
+              onSelect={(letter) => {
+                setSurnameLetter(letter);
+                setCurrentPage(1); // reset page
+              }}
             />
           </div>
         </div>
@@ -64,10 +82,11 @@ export default function CoursePage() {
 
       <div className="mt-6">
         {filteredParticipants.length === 0 ? (
-          <p className="text-gray-500">No participants found.</p>
-        ) : (
+        <p className="text-gray-500">No participants found.</p>
+      ) : (
+        <>
           <ul className="space-y-2">
-            {filteredParticipants.map((participant) => (
+            {paginatedParticipants.map((participant) => (
               <li
                 key={participant}
                 className="px-4 py-2 bg-white shadow rounded text-gray-800"
@@ -76,7 +95,13 @@ export default function CoursePage() {
               </li>
             ))}
           </ul>
-        )}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
+      )}
       </div>
     </main>
   );
