@@ -4,74 +4,87 @@ import type React from 'react';
 import {
   FileText,
   ClipboardList,
-  BookOpen,
-  ClipboardCopy, 
-  HelpCircle,
+  ClipboardCopy,
   ClipboardPaste,
   NotebookPen,
+  HelpCircle,
 } from 'lucide-react';
+import DataTable, { type Column } from '@/components/DataTable';
 
 type GradeEntry = {
   activity: string;
   course: string;
   grade: string | number;
   remarks: string;
+  subtext?: string;
 };
 
 type StudentGradeViewProps = {
   grades: GradeEntry[];
 };
 
+const getSubtext = (activity: string) => {
+  if (activity.toLowerCase().includes('assignment')) return '2 attempts submitted';
+  if (activity.toLowerCase().includes('quiz')) return '1 attempt recorded';
+  return '';
+};
+
 const getActivityIcon = (activity: string) => {
   const lower = activity.toLowerCase();
-  if(lower.includes('assignment')){
-    return <FileText size= {24} className="inline-block mr-1" />; 
+  if (lower.includes('assignment')) {
+    return <FileText className="inline-block mr-1 text-primary" size={35} />;
   }
-  if(lower.includes('quiz')){
-    return <ClipboardList size = {24} className="inline-block mr-1" />;
+  if (lower.includes('quiz')) {
+    return <ClipboardList className="inline-block mr-1 text-primary" size={35} />;
   }
-  if(lower.includes('past paper')){
-    return <ClipboardCopy size = {24} className="inline-block mr-1" />; 
+  if (lower.includes('past paper')) {
+    return <ClipboardCopy className="inline-block mr-1 text-primary" size={35} />;
   }
-  if(lower.includes('model paper')){
-    return <ClipboardPaste size = {24} className="inline-block mr-1" />; 
+  if (lower.includes('model paper')) {
+    return <ClipboardPaste className="inline-block mr-1 text-primary" size={35} />;
   }
-  if(lower.includes('homework')){
-    return <NotebookPen size = {24} className="inline-block mr-1" />; 
+  if (lower.includes('homework')) {
+    return <NotebookPen className="inline-block mr-1 text-primary" size={35} />;
   }
-  return <HelpCircle size={24} className="inline-block mr-1" />;
-}
+  return <HelpCircle className="inline-block mr-1 text-muted-foreground" size={30} />;
+};
 
 const StudentGradeView: React.FC<StudentGradeViewProps> = ({ grades }) => {
-  return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full border border-gray-300 text-sm text-left">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="w-[50px] px-2 py-2 border-b text-center"><span className="sr-only">Type</span></th>
-            <th className="px-4 py-2 border-b">Activity</th>
-            <th className="px-4 py-2 border-b">Course</th>
-            <th className="px-4 py-2 border-b">Grade</th>
-            <th className="px-4 py-2 border-b">Remarks</th>
-          </tr>
-        </thead>
-        <tbody>
-          {grades.map((entry, index) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            <tr key={index} className="hover:bg-gray-50">
-              <td className="px-2 py-2 border-b text-center align-middle">
-                {getActivityIcon(entry.activity)}
-              </td>
-              <td className="px-4 py-2 border-b">{entry.activity}</td>
-              <td className="px-4 py-2 border-b">{entry.course}</td>
-              <td className="px-4 py-2 border-b">{entry.grade}</td>
-              <td className="px-4 py-2 border-b">{entry.remarks}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+  const columns: Column[] = [
+    {
+      header: '',
+      accessor: (row: GradeEntry) => getActivityIcon(row.activity),
+    },
+    {
+      header: 'Activity',
+      accessor: (row: GradeEntry) => (
+        <div className="flex items-center gap-2">
+          <div className="flex flex-col">
+            <span className="font-semibold">{row.activity}</span>
+            {row.subtext && (
+              <span className="text-xs text-muted-foreground">{row.subtext}</span>
+            )}
+          </div>
+        </div>
+      ),
+    },
+    {
+      header: 'Course',
+      accessor: (row: GradeEntry) => (
+        <span className="font-semibold text-[#00173d]">{row.course}</span>
+      ),
+    },
+    {
+      header: 'Grade',
+      accessor: 'grade',
+    },
+    {
+      header: 'Remarks',
+      accessor: 'remarks',
+    },
+  ];
+
+  return <DataTable columns={columns} data={grades} className="mt-4" />;
 };
 
 export default StudentGradeView;
