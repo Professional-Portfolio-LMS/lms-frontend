@@ -28,27 +28,27 @@ const UploaderWithDesc = ({ otherInputs = [] }: UploaderWithDescProps) => {
       case "jpeg":
       case "png":
       case "gif":
-        return <FileImage size={20} color="#1475cf" />;
+        return <FileImage size={20} color="#00173d" />;
       case "pdf":
-        return <FileText size={20} color="#1475cf" />; // lucide doesn't have FilePdf, so use FileText or similar
+        return <FileText size={20} color="#00173d" />; // lucide doesn't have FilePdf, so use FileText or similar
       case "mp3":
       case "wav":
-        return <FileAudio size={20} color="#1475cf" />;
+        return <FileAudio size={20} color="#00173d" />;
       case "mp4":
       case "mov":
-        return <FileVideo size={20} color="#1475cf" />;
+        return <FileVideo size={20} color="#00173d" />;
       case "zip":
       case "rar":
-        return <FileArchive size={20} color="#1475cf" />;
+        return <FileArchive size={20} color="#00173d" />;
       case "js":
       case "ts":
       case "html":
       case "css":
-        return <FileCode size={20} color="#1475cf" />;
+        return <FileCode size={20} color="#00173d" />;
       case "txt":
-        return <FileText size={20} color="#1475cf" />;
+        return <FileText size={20} color="#00173d" />;
       default:
-        return <File size={20} color="#1475cf" />; // fallback icon
+        return <File size={20} color="#00173d" />; // fallback icon
     }
   };
 
@@ -101,7 +101,7 @@ const UploaderWithDesc = ({ otherInputs = [] }: UploaderWithDescProps) => {
             <div>{filename}</div>
           ) : (
             <>
-              <CloudUpload color="#1475cf" size={60} />
+              <CloudUpload color="#00173d" size={60} />
               <p>Browse files to upload</p>
             </>
           )}
@@ -131,7 +131,7 @@ const UploaderWithDesc = ({ otherInputs = [] }: UploaderWithDescProps) => {
         <div className="flex w-full justify-center align-middle mt-2">
           <button
             type="submit"
-            className="bg-[#1475cf] text-white px-5 py-2 rounded-md cursor-pointer hover:bg-[#0f5cad] active:scale-95 transition-all font-medium"
+            className="bg-[#00173d] text-white px-5 py-2 rounded-md cursor-pointer hover:bg-[#0f5cad] active:scale-95 transition-all font-medium"
           >
             Submit
           </button>

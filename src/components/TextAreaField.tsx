@@ -28,7 +28,7 @@ const TextAreaField = ({
 
   return (
     <div className="mb-2">
-      <div className="border border-[#1475cf] rounded-md h-[80px] text-[14px] relative focus-within:border-[#0f5ea8]">
+      <div className="border border-[#00173d] rounded-md h-[80px] text-[14px] relative focus-within:border-[#0f5ea8]">
         <textarea
           name={name}
           id={name}
