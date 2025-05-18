@@ -8,7 +8,7 @@ interface Submission {
   id: string;
   studentName: string;
   indexNumber: string;
-  submittedAt: string; // ISO string
+  submittedAt: string; 
   grade: number | null;
 }
 
