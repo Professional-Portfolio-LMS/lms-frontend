@@ -10,7 +10,7 @@ type Course = {
   id: number;
   title: string;
   instructor: string;
-  duration: string;
+  year: string;
   image: string;
 };
 
@@ -19,42 +19,42 @@ const courses: Course[] = [
     id: 1,
     title: 'Chemistry',
     instructor: 'Dr. Alan Mendes',
-    duration: '10 weeks',
+    year: '2025 A/L',
     image: 'images/chemisty.jpg',
   },
   {
     id: 2,
     title: 'Physics',
     instructor: 'Prof. Sarah Newton',
-    duration: '10 weeks',
+    year: '2025 A/L',
     image: 'images/physics.jpg',
   },
   {
     id: 3,
     title: 'Biology',
     instructor: 'Dr. Lisa Green',
-    duration: '10 weeks',
+    year: '2025 A/L',
     image: 'images/biology.jpg',
   },
   {
     id: 4,
     title: 'Combined Mathematics',
     instructor: 'Mr. Kevin Tan',
-    duration: '12 weeks',
+    year: '2025 A/L',
     image: 'images/mathematics.jpg',
   },
   {
     id: 5,
     title: 'ICT',
     instructor: 'Mr. Kevin Tan',
-    duration: '8 weeks',
+    year: '2025 A/L',
     image: 'images/ict.webp',
   },
   {
     id: 6,
     title: 'Agriculture',
     instructor: 'Dr. Ethan Fields',
-    duration: '9 weeks',
+    year: '2025 A/L',
     image: 'images/agriculture.jpg',
   },
 ];
@@ -73,13 +73,8 @@ export default function CoursesPage() {
             <img src={course.image} alt={course.title} className="w-full h-48 object-cover" />
             <div className="p-6">
               <h2 className="text-xl font-semibold mb-2">{course.title}</h2>
-              <p className="text-sm text-gray-500">Instructor: {course.instructor}</p>
-              <p className="text-sm text-gray-500 mb-4">Duration: {course.duration}</p>
-              <div className="text-right">
-                <button className="bg-blue-600 text-white text-sm px-4 py-2 rounded hover:bg-blue-700 transition">
-                  Enroll
-                </button>
-              </div>
+              <p className="text-sm text-gray-800">{course.instructor}</p>
+              <p className="text-sm text-gray-500 mb-4">{course.year}</p>
             </div>
           </Link>
         ))}
