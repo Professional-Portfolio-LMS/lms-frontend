@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 
 const courses = [
-  { id: 'ENG', name: 'Diploma in English', code: 'OXF/ENG/01' },
-  { id: 'IT', name: 'Diploma in IT', code: 'OXF/DIT/01' },
-  { id: 'HND', name: 'HND in Computing', code: 'OXF/HND/01' },
+  { id: 'ENG', name: 'English', code: 'ENG/01' },
+  { id: 'CHE', name: 'Chemestry', code: 'HND/01' },
+  { id: 'IT', name: 'ICT', code: 'DIT/01' },
 ];
 
 const semesters = ['Semester 01', 'Semester 02', 'Semester 03', 'Semester 04'];
@@ -19,11 +19,11 @@ const assignmentsData: Record<string, Record<number, {
 }[]>> = {
   IT: {
     1: [
-      { unit: '03', subject: 'CRP', issueDate: '03/02/2023', deadline: '03/05/2023', status: 'Submitted', checked: true },
-      { unit: '01', subject: 'Programming', issueDate: '03/09/2023', deadline: '03/09/2025', status: 'Pending', checked: false },
-      { unit: '01', subject: 'Database', issueDate: '03/02/2024', deadline: '03/10/2026', status: 'Pending', checked: false },
-      { unit: '01', subject: 'Networking', issueDate: '02/05/2022', deadline: '03/11/2023', status: 'Pending', checked: false},
-      { unit: '02', subject: 'Security', issueDate: '02/08/2022', deadline: '03/10/2023', status: 'Late Submission', checked: true},
+      { unit: '03', subject: 'CRP', issueDate: '03/02/2025', deadline: '03/05/2025', status: 'Submitted', checked: true },
+      { unit: '01', subject: 'Programming', issueDate: '03/09/2025', deadline: '03/09/2025', status: 'Pending', checked: false },
+      { unit: '01', subject: 'Database', issueDate: '03/02/2025', deadline: '03/10/2025', status: 'Pending', checked: false },
+      { unit: '01', subject: 'Networking', issueDate: '02/05/2025', deadline: '03/11/2025', status: 'Pending', checked: false},
+      { unit: '02', subject: 'Security', issueDate: '02/10/2025', deadline: '03/12/2025', status: 'Late Submission', checked: true},
     ],
     2: [],
     3: [],
@@ -37,8 +37,13 @@ const assignmentsData: Record<string, Record<number, {
     3: [],
     4: [],
   },
-  HND: {
-    1: [],
+  CHE: {
+    1: [
+      { unit: '01', subject: 'Introduction', issueDate: '01/01/2025', deadline: '01/15/2025', status: 'Submitted', checked: true },
+      { unit: '02', subject: 'Organic Chemistry', issueDate: '01/20/2025', deadline: '08/10/2025', status: 'Pending', checked: false },
+      { unit: '03', subject: 'Inorganic Chemistry', issueDate: '02/01/2025', deadline: '08/20/2025', status: 'Pending', checked: false },
+      { unit: '04', subject: 'Physical Chemistry', issueDate: '02/15/2025', deadline: '03/05/2025', status: 'Late Submission', checked: true },
+    ],
     2: [],
     3: [],
     4: [],
@@ -46,7 +51,7 @@ const assignmentsData: Record<string, Record<number, {
 };
 
 export default function AssignmentsPage() {
-  const [selectedCourse, setSelectedCourse] = useState('IT');
+  const [selectedCourse, setSelectedCourse] = useState('CHE');
   const [selectedSemester, setSelectedSemester] = useState(1);
 
   const assignments = assignmentsData[selectedCourse]?.[selectedSemester] || [];
@@ -93,10 +98,10 @@ export default function AssignmentsPage() {
       </div>
 
 
-      <div className="bg-white rounded-lg shadow max-w-5xl mx-auto overflow-x-auto">
+      <div className="bg-transparent rounded-lg border border-black max-w-5xl mx-auto overflow-x-auto">
         <table className="w-full table-auto">
           <thead>
-            <tr className="text-left text-gray-600 border-b">
+            <tr className="text-left text-white border-b bg-black">
               <th className="p-3">Unit</th>
               <th className="p-3">Subject</th>
               <th className="p-3">Issues Date</th>
@@ -116,7 +121,7 @@ export default function AssignmentsPage() {
                     />{' '}
                     {a.unit}
                   </td>
-                  <td className="p-3">{a.subject}</td>
+                  <td className="p-3 font-bold">{a.subject}</td>
                   <td className="p-3">{a.issueDate}</td>
                   <td className="p-3">{a.deadline}</td>
                   <td className={`p-3 font-medium text-black`}>{a.status}</td>
