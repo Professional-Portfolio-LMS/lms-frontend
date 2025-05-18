@@ -1,10 +1,10 @@
 import StudentGradeView from '@/components/StudentGradeView';
 
 const dummyGrades = [
-  { activity: 'Quiz 1', course: 'Math 101', grade: 85, remarks: 'Good work', subtext: '1 attempt recorded' },
-  { activity: 'Assignment 2', course: 'Physics 102', grade: 92, remarks: 'Excellent', subtext: '2 attempts submitted' },
-  { activity: 'Homework', course: 'Chemistry 103', grade: 76, remarks: 'Needs improvement',},
-  { activity: 'Past Paper', course: 'Biology 104', grade: 88, remarks: 'Well done', subtext: '1 attempt recorded' },
+  { activity: 'Quiz 1', course: 'Math 101', grade: 35, remarks: 'Very bad performance', subtext: '1 attempt recorded' },
+  { activity: 'Assignment 2', course: 'Physics 102', grade: 57, remarks:"The student's performance was excellent", subtext: '2 attempts submitted' },
+  { activity: 'Homework', course: 'Chemistry 103', grade: 66, remarks: 'Needs improvement',},
+  { activity: 'Past Paper', course: 'Biology 104', grade: 78, remarks: 'Well done', subtext: '1 attempt recorded' },
   { activity: 'Model Paper', course: 'History 105', grade: 90, remarks: 'Great job', subtext: '1 attempt recorded' },
 ];
 
