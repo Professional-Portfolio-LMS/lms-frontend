@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 // Define user roles
-const USER_ROLE: 'student' | 'instructor' = 'instructor';
+const USER_ROLE: 'student' | 'instructor' = 'student';
 
 // Course and module data types
 interface Course {
