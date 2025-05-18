@@ -18,7 +18,7 @@ const AlphabetFilter: React.FC<Props> = ({ title, selectedLetter, onSelect }) =>
           onClick={() => onSelect('')}
           className={`px-2 py-1 rounded ${
             selectedLetter === ''
-              ? 'bg-blue-500 text-white'
+              ? 'bg-[#00173d] text-white'
               : 'bg-gray-200 text-gray-700'
           }`}
         >
@@ -31,7 +31,7 @@ const AlphabetFilter: React.FC<Props> = ({ title, selectedLetter, onSelect }) =>
             onClick={() => onSelect(letter)}
             className={`px-2 py-1 rounded ${
               selectedLetter === letter
-              ? 'bg-blue-500 text-white'
+              ? 'bg-[#00173d] text-white'
               : 'bg-gray-200 text-gray-700'
             }`}
           >
