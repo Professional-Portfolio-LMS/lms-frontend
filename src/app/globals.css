@@ -84,6 +84,7 @@ body {
   justify-content: center;
   align-items: center;
   border: 2px dashed #00173d;
+  margin-bottom: 16px;
   height: 132px;
   width: 100%;
   cursor: pointer;
