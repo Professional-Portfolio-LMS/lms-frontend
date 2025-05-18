@@ -160,4 +160,3 @@ const StudentGradeView: React.FC<StudentGradeViewProps> = ({ grades }) => {
 };
 
 export default StudentGradeView;
-
