@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 
 // Define user roles
-const USER_ROLE: 'student' | 'instructor' = 'student';
+const USER_ROLE: 'student' | 'instructor' = 'instructor';
 
 // Course and module data types
 interface Course {
@@ -238,10 +238,9 @@ export default function CoursePage() {
                 {isEditing ? 'Edit Course' : 'Add New Course'}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input name="id" placeholder="Course ID" value={form.id} onChange={handleChange} className="border rounded p-2" disabled={isEditing} />
                 <input name="name" placeholder="Course Name" value={form.name} onChange={handleChange} className="border rounded p-2" />
                 <input name="code" placeholder="Course Code" value={form.code} onChange={handleChange} className="border rounded p-2" />
-                <input name="category" placeholder="Category" value={form.category} onChange={handleChange} className="border rounded p-2" />
+                <input name="category" placeholder="Category" value={form.category} onChange={handleChange} className="border rounded p-2 col-span-full" />
                 <input name="startDate" type="date" placeholder="Start Date" value={form.startDate} onChange={handleChange} className="border rounded p-2" />
                 <input name="endDate" type="date" placeholder="End Date" value={form.endDate} onChange={handleChange} className="border rounded p-2" />
                 <textarea name="description" placeholder="Course Description" value={form.description} onChange={handleChange} className="border rounded p-2 col-span-full" />
