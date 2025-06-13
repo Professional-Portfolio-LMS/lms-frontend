@@ -1,45 +1,41 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
+import React, { useState } from "react";
+import Link from "next/link";
 
 interface RegisterProps {
   // Add any props you might need to communicate with parent components
 }
 
 export default function Register(props: RegisterProps) {
-  const router = useRouter();
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setIsLoading(true);
-    
+
     try {
       // API call would go here
-      
+
       // Simulating a successful registration:
       setTimeout(() => {
         setSuccess(true);
         setIsLoading(false);
       }, 1000);
-      
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed');
+      setError(err instanceof Error ? err.message : "Registration failed");
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-full w-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="bg-white p-8 rounded-lg shadow-sm max-w-md mx-auto w-full">
         {/* Logo will be placed here - leave comment for manual placement */}
         {/* <div className="flex justify-center mb-6">
@@ -50,7 +46,7 @@ export default function Register(props: RegisterProps) {
             height={80}
           />
         </div> */}
-        
+
         <h2 className="text-center text-xl font-semibold mb-6">
           Sign up Your Account
         </h2>
@@ -59,7 +55,9 @@ export default function Register(props: RegisterProps) {
           <div className="rounded-md bg-green-50 p-4">
             <div className="flex">
               <div className="ml-3">
-                <h3 className="text-sm font-medium text-green-800">Registration successful!</h3>
+                <h3 className="text-sm font-medium text-green-800">
+                  Registration successful!
+                </h3>
                 <div className="mt-2 text-sm text-green-700">
                   <p>Your account has been created. You can now log in.</p>
                 </div>
@@ -78,9 +76,12 @@ export default function Register(props: RegisterProps) {
                 </div>
               </div>
             )}
-            
+
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Username
               </label>
               <input
@@ -93,9 +94,12 @@ export default function Register(props: RegisterProps) {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               />
             </div>
-            
+
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Email
               </label>
               <input
@@ -111,7 +115,10 @@ export default function Register(props: RegisterProps) {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Password
               </label>
               <input
@@ -137,9 +144,9 @@ export default function Register(props: RegisterProps) {
             </div>
           </form>
         )}
-        
+
         <div className="mt-6 text-center text-sm">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link href="/login" className="text-blue-600 hover:text-blue-500">
             Sign in
           </Link>

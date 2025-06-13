@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ProfileCardProps {
   name: string;
@@ -12,6 +13,10 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   indexNo,
   isSidebarExpanded,
 }) => {
+  const { user } = useAuth();
+
+  console.log("BRUH", user);
+
   return (
     <div className="profile-card-container flex items-center gap-3 transition-all duration-200 ease-in-out">
       <Image
@@ -28,8 +33,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             : "opacity-0 w-0 pointer-events-none"
         }`}
       >
-        <div className="text-xl">Hi, {name}</div>
-        <div className="text-sm">{indexNo}</div>
+        <div className="text-xl">Hi, {user?.name ?? "Guest"}</div>
+        <div className="text-sm">{user?.id ?? "No ID"}</div>
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 const NavItems = () => {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
 
   function isNavItemActive(pathname: string, nav: string) {
     return pathname.startsWith(nav);

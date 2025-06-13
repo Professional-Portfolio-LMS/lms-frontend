@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 
 interface ContentViewerProps {}
 
 interface ContentItem {
   id: string;
   title: string;
-  type: 'video' | 'pdf' | 'document' | 'slide';
+  type: "video" | "pdf" | "document" | "slide";
   url: string;
   description?: string;
   duration?: string;
@@ -20,30 +20,30 @@ interface ContentItem {
 export default function ContentViewer(props: ContentViewerProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const contentId = searchParams ? searchParams.get('id') : null;
+  const contentId = searchParams ? searchParams.get("id") : null;
 
   const [content, setContent] = useState<ContentItem | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchContent = async () => {
       try {
         setTimeout(() => {
           setContent({
-            id: contentId || '1',
-            title: 'Equations in Motion: Celebrating Diversity in Science',
-            type: 'video',
-            url: '/videos/sample.mp4',
+            id: contentId || "1",
+            title: "Equations in Motion: Celebrating Diversity in Science",
+            type: "video",
+            url: "/videos/sample.mp4",
             description:
-              'Dive into a visually stunning journey where mathematical equations come to life through dynamic animations overlaying scenes of diverse scientists in action. From calculating formulas to collecting field samples, this video celebrates the universal language of mathematics and its vital role across scientific disciplines. Witness the seamless integration of abstract theory and practical exploration as equations dance across the screen, highlighting the brilliance and diversity of minds shaping the future of science.',
-            duration: '15:30',
-            size: '120 MB',
+              "Dive into a visually stunning journey where mathematical equations come to life through dynamic animations overlaying scenes of diverse scientists in action. From calculating formulas to collecting field samples, this video celebrates the universal language of mathematics and its vital role across scientific disciplines. Witness the seamless integration of abstract theory and practical exploration as equations dance across the screen, highlighting the brilliance and diversity of minds shaping the future of science.",
+            duration: "15:30",
+            size: "120 MB",
           });
           setIsLoading(false);
         }, 1000);
       } catch (err) {
-        setError('Failed to load content');
+        setError("Failed to load content");
         setIsLoading(false);
       }
     };
@@ -55,7 +55,7 @@ export default function ContentViewer(props: ContentViewerProps) {
     if (!content) return null;
 
     switch (content.type) {
-      case 'video':
+      case "video":
         return (
           <div className="w-full">
             <video
@@ -68,7 +68,7 @@ export default function ContentViewer(props: ContentViewerProps) {
             </video>
           </div>
         );
-      case 'pdf':
+      case "pdf":
         return (
           <div className="w-full">
             <iframe
@@ -94,8 +94,10 @@ export default function ContentViewer(props: ContentViewerProps) {
   if (isLoading) {
     return (
       <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="bg-white p-8 rounded-xl shadow-md max-w-4xl mx-auto w-full">
-          <div className="text-center text-lg font-medium text-gray-700">Loading content...</div>
+        <div className="p-8 rounded-xl shadow-md max-w-6xl mx-auto w-full">
+          <div className="text-center text-lg font-medium text-gray-700">
+            Loading content...
+          </div>
         </div>
       </div>
     );
@@ -104,22 +106,21 @@ export default function ContentViewer(props: ContentViewerProps) {
   if (error || !content) {
     return (
       <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="bg-white p-8 rounded-xl shadow-md max-w-4xl mx-auto w-full">
-          <div className="text-center text-red-600">{error || 'Content not found'}</div>
+        <div className="p-8 rounded-xl shadow-md max-w-6xl mx-auto w-full">
+          <div className="text-center text-red-600">
+            {error || "Content not found"}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50">
-      <div className="bg-white p-8 rounded-2xl shadow-md max-w-4xl mx-auto w-full space-y-6">
+    <div className="min-h-screen w-full flex flex-col justify-center py-6 sm:px-6 lg:px-8 bg-gray-50">
+      <div className="p-8 rounded-2xl shadow-md max-w-6xl mx-auto w-full space-y-6">
         <div className="mb-6">
-          <Link
-            href="/"
-            className="text-blue-600 hover:text-blue-500 text-sm"
-          >
-            ← Back to Home
+          <Link href="/" className="text-blue-600 hover:text-blue-500 text-sm">
+            ← Back to Hom6
           </Link>
         </div>
 
@@ -142,7 +143,7 @@ export default function ContentViewer(props: ContentViewerProps) {
 
         <div className="flex justify-center gap-4 pt-4">
           <button
-            onClick={() => window.open(content.url, '_blank')}
+            onClick={() => window.open(content.url, "_blank")}
             className="bg-blue-900 text-white rounded-md py-2 px-4 text-sm font-medium hover:bg-blue-800 transition"
           >
             Open in New Tab
