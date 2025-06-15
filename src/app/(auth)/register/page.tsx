@@ -3,9 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
-interface RegisterProps {
-  // Add any props you might need to communicate with parent components
-}
+interface RegisterProps {}
 
 export default function Register(props: RegisterProps) {
   const [username, setUsername] = useState("");
@@ -21,15 +19,28 @@ export default function Register(props: RegisterProps) {
     setIsLoading(true);
 
     try {
-      // API call would go here
+      const response = await fetch("http://localhost:8080/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: username,
+          email: email,
+          password: password,
+          role: "STUDENT", // 🔐 hardcoded role
+        }),
+      });
 
-      // Simulating a successful registration:
-      setTimeout(() => {
-        setSuccess(true);
-        setIsLoading(false);
-      }, 1000);
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Registration failed");
+      }
+
+      setSuccess(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
+    } finally {
       setIsLoading(false);
     }
   };
@@ -37,16 +48,6 @@ export default function Register(props: RegisterProps) {
   return (
     <div className="min-h-full w-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="bg-white p-8 rounded-lg shadow-sm max-w-md mx-auto w-full">
-        {/* Logo will be placed here - leave comment for manual placement */}
-        {/* <div className="flex justify-center mb-6">
-          <Image 
-            src="/path-to-your-logo.png" 
-            alt="Logo" 
-            width={120} 
-            height={80}
-          />
-        </div> */}
-
         <h2 className="text-center text-xl font-semibold mb-6">
           Sign up Your Account
         </h2>
@@ -139,7 +140,7 @@ export default function Register(props: RegisterProps) {
                 disabled={isLoading}
                 className="w-full bg-blue-900 text-white rounded-md py-2 px-4 text-sm font-medium hover:bg-blue-800 transition"
               >
-                Sign Up
+                {isLoading ? "Registering..." : "Sign Up"}
               </button>
             </div>
           </form>

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
+import { jwtDecode } from "jwt-decode";
 
 interface LoginProps {
   // Add any props you might need to communicate with parent components
@@ -22,28 +23,37 @@ export default function Login(props: LoginProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://localhost:8080/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("http://localhost:8080/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       const searchParams = new URLSearchParams(window.location.search);
-      const from = searchParams.get('from') || '/';
+      const from = searchParams.get("from") || "/";
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.message || 'Invalid credentials');
+      if (!res.ok) throw new Error(data.message || "Invalid credentials");
 
       login(data.token); // Save the token + decoded user info
+      const decoded = jwtDecode(data.token);
+
+      if (decoded.exp) {
+        const expires = new Date(decoded.exp * 1000).toUTCString();
+        document.cookie = `token=${data.token}; path=/; expires=${expires}`;
+      }
       document.cookie = `token=${data.token}; path=/;`;
+
       router.push(from);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
+      setError(
+        err instanceof Error ? err.message : "Login failed. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }

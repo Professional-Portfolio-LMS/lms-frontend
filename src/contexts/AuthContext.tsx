@@ -7,6 +7,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
+import { jwtDecode } from "jwt-decode";
 
 type User = {
   id: string;
@@ -24,6 +25,8 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+let logoutTimer: NodeJS.Timeout;
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -31,10 +34,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
+
     if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+      const decodedToken: { exp: number } = jwtDecode(storedToken);
+      const now = Date.now() / 1000;
+
+      if (decodedToken.exp > now) {
+        setToken(storedToken);
+        setUser(JSON.parse(storedUser));
+        const expiresInMs = (decodedToken.exp - now) * 1000;
+
+        logoutTimer = setTimeout(() => logout(), expiresInMs);
+      } else {
+        logout();
+      }
     }
+
+    return () => clearTimeout(logoutTimer);
   }, []);
 
   const login = (token: string) => {
@@ -49,6 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUser(null);
     setToken(null);
+    document.cookie = "token=; Max-Age=0; path=/";
     localStorage.removeItem("token");
     localStorage.removeItem("user");
   };

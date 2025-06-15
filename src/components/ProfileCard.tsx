@@ -34,7 +34,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         }`}
       >
         <div className="text-xl">Hi, {user?.name ?? "Guest"}</div>
-        <div className="text-sm">{user?.id ?? "No ID"}</div>
+        <div className="text-sm">{user?.email ?? "No email bruh"}</div>
       </div>
     </div>
   );
