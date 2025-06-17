@@ -116,8 +116,8 @@ export default function UploadContent(props: UploadContentProps) {
   };
 
   return (
-    <div className="min-h-screen flex w-full flex-col justify-center py-6 sm:px-6 lg:px-8">
-      <div className="bg-white p-8 rounded-lg shadow-sm max-w-2xl mx-auto w-full">
+    <div className="min-h-screen flex w-full flex-col justify-center p-8 sm:px-6 lg:px-8">
+      <div className="bg-white p-8 rounded-lg shadow-sm w-full">
         {/* Logo will be placed here - leave comment for manual placement */}
         {/* <div className="flex justify-center mb-6">
           <Image 

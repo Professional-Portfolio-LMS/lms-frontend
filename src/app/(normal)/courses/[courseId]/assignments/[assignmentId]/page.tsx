@@ -2,98 +2,138 @@
 
 import FileUploader from "@/components/FileUploader";
 import TextAreaField from "@/components/TextAreaField";
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import toast from "react-hot-toast";
+
+interface Assignment {
+  id: string;
+  courseId: string;
+  type: "ASSIGNMENT" | "QUIZ" | "EXAM";
+  title: string;
+  description: string;
+  dueDate: Date;
+  maxScore: number;
+  createdAt: Date;
+  files: {
+    fileName: string;
+    url: string;
+  }[];
+}
 
 export default function SpecificAssignmentPage() {
-  const [studentComments, setStudentComments] = useState("");
+  const params = useParams();
+  const courseId = params?.courseId as string;
+  const assignmentId = params?.assignmentId as string;
+
+  const [comment, setComment] = useState("");
   const [files, setFiles] = useState<File[]>([]);
-  const [assignment, setAssignment] = useState({
-    id: "a1b2c3d4",
-    courseID: "cs101",
-    title: "Midterm Assignment",
-    type: "assign",
-    description: "Submit the analysis report on OS design.",
-    dueDate: "2025-06-25T23:59:00Z",
-    maxScore: 100,
-    createdAt: "2025-05-09T10:15:00Z",
-    files: [
-      {
-        fileName: "instructions.pdf",
-        fileURL: "https://your-cdn.com/uploads/instructions.pdf",
-      },
-      {
-        fileName: "grading_rubric.docx",
-        fileURL: "https://your-cdn.com/uploads/grading_rubric.docx",
-      },
-    ],
-  });
+  const [assignment, setAssignment] = useState<Assignment | null>(null);
+
+  useEffect(() => {
+    async function loadAssignment() {
+      try {
+        const res = await fetch(
+          `http://localhost:8080/assignments/course/${courseId}/assignment/${assignmentId}`
+        );
+        if (!res.ok) throw new Error("Failed to fetch assignment");
+
+        const data = await res.json();
+        setAssignment({
+          ...data,
+          files: data.fileUrls.map((url: string) => {
+            const fileName = decodeURIComponent(url.split("/").pop() || "file");
+            return { fileName, fileURL: url };
+          }),
+        });
+      } catch (err) {
+        console.error("Error fetching assignment:", err);
+      }
+    }
+
+    if (courseId && assignmentId) loadAssignment();
+  }, [courseId, assignmentId]);
 
   const handleCommentsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setStudentComments(e.target.value);
+    setComment(e.target.value);
   };
+
+  const { token } = useAuth();
 
   async function handleSubmit(
     event: FormEvent<HTMLFormElement>
   ): Promise<void> {
     event.preventDefault();
 
-    try {
-      const formData = new FormData();
+    const formData = new FormData();
+
+    if (assignment) {
       formData.append("assignmentId", assignment.id);
-      formData.append("courseID", assignment.courseID);
-      formData.append("studentComments", studentComments);
+      formData.append("courseID", assignment.courseId);
+      formData.append("comment", comment);
+      files.forEach((file) => formData.append("files", file, file.name));
 
-      files.forEach((file) => {
-        formData.append("files", file, file.name);
-      });
+      try {
+        await toast.promise(
+          fetch(
+            `http://localhost:8080/submissions/${courseId}/${assignment?.id}`,
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              body: formData,
+            }
+          ).then(async (res) => {
+            if (!res.ok) {
+              const msg = await res.text();
+              throw new Error(msg || "Failed to submit assignment");
+            }
+            return res.json();
+          }),
+          {
+            loading: "Submitting your work...",
+            success: "Assignment submitted successfully!",
+            error: (err) => `Submission failed: ${err.message}`,
+          }
+        );
 
-      console.log("FormData contents:");
-      for (const pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]);
+        setFiles([]);
+        setComment("");
+      } catch (error) {
+        console.error("Submission failed:", error);
       }
-
-      // const response = await fetch("/api/assignments/submit", {
-      //   method: "POST",
-      //   body: formData,
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error("Failed to submit assignment.");
-      // }
-
-      // const result = await response.json();
-      // alert("Assignment submitted successfully!");
-      // console.log("Server response:", result);
-
-      // setFiles([]);
-      // setStudentComments("");
-    } catch (error) {
-      console.error("Error submitting assignment:", error);
-      alert("An error occurred while submitting. Please try again.");
     }
   }
+
+  if (!assignment) return <p>Loading assignment...</p>;
 
   return (
     <div className="flex flex-col gap-3 max-w-6xl p-6">
       {/* Assignment Details */}
       <div className="border-[#00173d] border-2 p-4 rounded-lg shadow-sm">
         <h2 className="text-2xl font-bold">{assignment.title}</h2>
-        <p className="text-sm text-gray-500">Due: {assignment.dueDate}</p>
+        <p className="text-sm text-gray-500">
+          Due: {assignment.dueDate.toLocaleString()}
+        </p>
         <p className="mt-4">{assignment.description}</p>
         <div className="mt-4 flex flex-col gap-1">
           <p className="font-semibold">Attached Files:</p>
-          {assignment.files.map((file, idx) => (
-            <a
-              key={idx}
-              href={file.fileURL}
-              download={file.fileName}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 underline hover:text-blue-800"
-            >
-              {file.fileName}
-            </a>
-          ))}
+          {assignment.files.length > 0
+            ? assignment.files.map((file, idx) => (
+                <a
+                  key={idx}
+                  href={file.url}
+                  download={file.fileName}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline hover:text-blue-800"
+                >
+                  {file.fileName}
+                </a>
+              ))
+            : "None"}
         </div>
       </div>
 
@@ -102,15 +142,15 @@ export default function SpecificAssignmentPage() {
         <FileUploader files={files} setFiles={setFiles} />
         <TextAreaField
           label="Student Comments"
-          name="studentComments"
-          value={studentComments}
+          name="comment"
+          value={comment}
           onChange={handleCommentsChange}
         />
         <button
           type="submit"
           className="bg-[#00173d] text-white px-5 py-2 rounded-md hover:bg-blue-800 active:scale-95 transition-all font-medium"
         >
-          Save Assignment
+          Submit your Work
         </button>
       </form>
     </div>
