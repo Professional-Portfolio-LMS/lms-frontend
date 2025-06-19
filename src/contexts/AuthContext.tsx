@@ -7,6 +7,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
+import {useRouter} from "next/navigation"
 import { jwtDecode } from "jwt-decode";
 import { User } from "@/app/(normal)/courses/[courseId]/assignments/[assignmentId]/submissions/page";
 
@@ -24,6 +25,7 @@ let logoutTimer: NodeJS.Timeout;
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -61,6 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     document.cookie = "token=; Max-Age=0; path=/";
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    router.push("/login"); 
   };
 
   return (

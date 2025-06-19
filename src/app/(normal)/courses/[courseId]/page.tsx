@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface CourseResponseDTO {
   id: string;
@@ -21,6 +22,7 @@ export default function CoursePage() {
   const params = useParams();
   const courseId = params?.courseId;
   const router = useRouter();
+  const { user } = useAuth();
   const [course, setCourse] = useState<CourseResponseDTO | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -68,6 +70,9 @@ export default function CoursePage() {
     return <div className="p-6 text-red-600">Course not found.</div>;
   }
 
+  const isInstructor = user?.role === "INSTRUCTOR";
+  const isStudent = user?.role === "STUDENT";
+
   return (
     <div className="max-w-6xl px-6 py-8">
       <h1 className="text-3xl font-bold text-[#00173d] mb-2">{course.title}</h1>
@@ -93,10 +98,19 @@ export default function CoursePage() {
 
       <button
         onClick={() => router.push(`/courses/${course.id}/assignments`)}
-        className="bg-[#00173d] text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+        className="bg-[#00173d] text-white px-4 py-2 mr-4 rounded hover:bg-blue-700 transition"
       >
         View Assignments
       </button>
+
+      {isInstructor && (
+        <button
+          onClick={() => router.push(`/instructor/courses/${course.id}/manage`)}
+          className="bg-green-700 text-white px-4 py-2 rounded mr-4 hover:bg-green-800 transition"
+        >
+          Manage Course
+        </button>
+      )}
     </div>
   );
 }

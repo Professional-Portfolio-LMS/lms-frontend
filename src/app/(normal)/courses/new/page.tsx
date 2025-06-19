@@ -13,6 +13,8 @@ export default function CreateCoursePage() {
   const router = useRouter();
   const { user, token } = useAuth();
 
+  console.log("SISF", user);
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -34,7 +36,7 @@ export default function CreateCoursePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!user?.id || user.role !== "INSTRUCTOR") {
+    if (!user || user.role !== "INSTRUCTOR") {
       toast.error("Only instructors can create courses.");
       return;
     }
