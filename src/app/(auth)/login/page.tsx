@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { jwtDecode } from "jwt-decode";
+import toast from "react-hot-toast";
 
 interface LoginProps {
   // Add any props you might need to communicate with parent components
@@ -26,28 +27,35 @@ export default function Login(props: LoginProps) {
     setError("");
     setIsLoading(true);
 
+    const searchParams = new URLSearchParams(window.location.search);
+    const from = searchParams.get("from") || "/";
+
     try {
-      const res = await fetch("http://localhost:8080/users/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      await toast.promise(
+        fetch("http://localhost:8080/users/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }).then(async (res) => {
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.message || "Invalid credentials");
 
-      const searchParams = new URLSearchParams(window.location.search);
-      const from = searchParams.get("from") || "/";
+          login(data.token);
+          const decoded = jwtDecode(data.token);
+          if (decoded.exp) {
+            const expires = new Date(decoded.exp * 1000).toUTCString();
+            document.cookie = `token=${data.token}; path=/; expires=${expires}`;
+          }
+          document.cookie = `token=${data.token}; path=/;`;
 
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message || "Invalid credentials");
-
-      login(data.token); // Save the token + decoded user info
-      const decoded = jwtDecode(data.token);
-
-      if (decoded.exp) {
-        const expires = new Date(decoded.exp * 1000).toUTCString();
-        document.cookie = `token=${data.token}; path=/; expires=${expires}`;
-      }
-      document.cookie = `token=${data.token}; path=/;`;
+          return data;
+        }),
+        {
+          loading: "Logging in...",
+          success: "Login successful!",
+          error: (err) => err.message || "Login failed. Please try again.",
+        }
+      );
 
       router.push(from);
     } catch (err) {
@@ -58,6 +66,7 @@ export default function Login(props: LoginProps) {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen w-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
