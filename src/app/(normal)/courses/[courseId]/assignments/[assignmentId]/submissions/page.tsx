@@ -4,12 +4,13 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import DataTable, { Column } from "@/components/DataTable";
 import { useParams } from "next/navigation";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
-interface User {
+export interface User {
   id: string;
   name: string;
   email: string;
-  role: string;
+  role: "STUDENT" | "INSTRUCTOR";
   createdAt: string;
 }
 
@@ -93,14 +94,16 @@ const CourseSubmissionsPage = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-8">
-      <h1 className="text-2xl font-semibold mb-6">Student Submissions</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <DataTable columns={columns} data={submissions} />
-      )}
-    </div>
+    <ProtectedRoute allowedRoles={["INSTRUCTOR"]}>
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        <h1 className="text-2xl font-semibold mb-6">Student Submissions</h1>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <DataTable columns={columns} data={submissions} />
+        )}
+      </div>
+    </ProtectedRoute>
   );
 };
 

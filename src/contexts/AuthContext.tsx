@@ -8,13 +8,7 @@ import {
   ReactNode,
 } from "react";
 import { jwtDecode } from "jwt-decode";
-
-type User = {
-  id: string;
-  email: string;
-  name: string;
-  // Add more fields as needed
-};
+import { User } from "@/app/(normal)/courses/[courseId]/assignments/[assignmentId]/submissions/page";
 
 type AuthContextType = {
   user: User | null;
@@ -54,8 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = (token: string) => {
-    const decodedUser = JSON.parse(atob(token.split(".")[1])); // use jwt-decode lib for safety
-
+    const decodedUser = jwtDecode<User>(token); // Use jwt-decode properly here
     setUser(decodedUser);
     setToken(token);
     localStorage.setItem("token", token);
