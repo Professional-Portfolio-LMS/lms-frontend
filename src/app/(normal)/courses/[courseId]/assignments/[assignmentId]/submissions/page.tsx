@@ -5,9 +5,18 @@ import Link from "next/link";
 import DataTable, { Column } from "@/components/DataTable";
 import { useParams } from "next/navigation";
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: string;
+}
+
 interface Submission {
   id: string;
-  studentId: string;
+  assignmentId: string;
+  student: User;
   comment: string;
   submittedAt: string;
   grade: number | null;
@@ -47,8 +56,15 @@ const CourseSubmissionsPage = () => {
     fetchData();
   }, [courseId, assignmentId]);
 
-  const columns = [
-    { header: "Student ID", accessor: "studentId" },
+  const columns: Column[] = [
+    {
+      header: "Student Name",
+      accessor: (row: Submission) => row.student?.name || "—",
+    },
+    {
+      header: "Student ID",
+      accessor: (row: Submission) => row.student?.id || "—",
+    },
     {
       header: "Submitted At",
       accessor: (row: Submission) => new Date(row.submittedAt).toLocaleString(),

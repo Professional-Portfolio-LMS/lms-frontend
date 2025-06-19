@@ -1,29 +1,64 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import InputField from "@/components/InputField";
 import TextAreaField from "@/components/TextAreaField";
+import { useParams } from "next/navigation";
 
 const SpecificSubmissionPage = () => {
+  const params = useParams();
+  const courseId = params?.courseId as string;
+  const assignmentId = params?.assignmentId as string;
+  const submissionId = params?.submissionId as string;
+
+  const [submission, setSubmission] = useState<any>(null);
   const [grade, setGrade] = useState("");
   const [instructorFeedback, setInstructorFeedback] = useState("");
+  const [loading, setLoading] = useState(true);
 
   // Dummy data
-  const submission = {
-    studentName: "Jane Perera",
-    indexNumber: "IT2020001",
-    assignmentTitle: "Operating Systems Assignment 1",
-    submittedAt: "2025-05-10T11:43:00Z",
-    files: [
-      {
-        name: "report.pdf",
-        url: "/uploads/report.pdf",
-      },
-    ],
-    studentComments:
-      "Please find my assignment attached. Let me know if there are any issues.",
-    wasLate: true,
-  };
+  // const submission = {
+  //   studentName: "Jane Perera",
+  //   indexNumber: "IT2020001",
+  //   assignmentTitle: "Operating Systems Assignment 1",
+  //   submittedAt: "2025-05-10T11:43:00Z",
+  //   files: [
+  //     {
+  //       name: "report.pdf",
+  //       url: "/uploads/report.pdf",
+  //     },
+  //   ],
+  //   studentComments:
+  //     "Please find my assignment attached. Let me know if there are any issues.",
+  //   wasLate: true,
+  // };
+
+  useEffect(() => {
+    if (!courseId || !assignmentId || !submissionId) return;
+
+    const fetchSubmission = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:8080/submissions/${courseId}/${assignmentId}/${submissionId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        const data = await res.json();
+        setSubmission(data);
+        setGrade(data.grade ?? "");
+        setInstructorFeedback(data.instructorComments ?? "");
+      } catch (err) {
+        console.error("Error fetching submission:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSubmission();
+  }, [courseId, assignmentId, submissionId]);
 
   const handleGradeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGrade(e.target.value);
@@ -37,11 +72,16 @@ const SpecificSubmissionPage = () => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-
     for (let [key, value] of formData.entries()) {
       console.log(`${key}:`, value);
     }
+
+    // TODO: Call backend PATCH/POST to save grade and feedback
   }
+
+  if (loading) return <p className="p-6">Loading submission...</p>;
+  if (!submission)
+    return <p className="p-6 text-red-600">Submission not found.</p>;
 
   return (
     <div className="max-w-6xl p-6">
@@ -49,34 +89,31 @@ const SpecificSubmissionPage = () => {
 
       <div className="space-y-2 mb-6">
         <p>
-          <span className="font-medium">Student:</span> {submission.studentName}{" "}
-          ({submission.indexNumber})
+          <span className="font-medium">Student:</span>{" "}
+          {submission.student.name} ({submission.student.id})
         </p>
         <p>
-          <span className="font-medium">Assignment:</span>{" "}
-          {submission.assignmentTitle}
+          <span className="font-medium">Assignment ID:</span>{" "}
+          {submission.assignmentId}
         </p>
         <p>
           <span className="font-medium">Submitted At:</span>{" "}
           {new Date(submission.submittedAt).toLocaleString()}
         </p>
-        {submission.wasLate && (
-          <p className="text-red-600 font-semibold">⚠️ Submitted Late</p>
-        )}
       </div>
 
       <div className="mb-4">
         <h2 className="font-semibold mb-1">Submitted Files:</h2>
         <ul className="list-disc pl-6">
-          {submission.files.map((file, index) => (
+          {submission.fileUrls.map((url: string, index: number) => (
             <li key={index}>
               <a
-                href={file.url}
+                href={url}
                 className="text-[#00173d] underline hover:text-blue-500"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {file.name}
+                {url.split("/").pop()}
               </a>
             </li>
           ))}
@@ -85,7 +122,7 @@ const SpecificSubmissionPage = () => {
 
       <div className="mb-6">
         <h2 className="font-semibold mb-1">Student Comments:</h2>
-        <p className="border p-2 rounded-md">{submission.studentComments}</p>
+        <p className="border p-2 rounded-md">{submission.comment || "—"}</p>
       </div>
 
       <form onSubmit={handleSave}>
