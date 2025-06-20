@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,7 +14,7 @@ interface LoginProps {
 export default function Login(props: LoginProps) {
   const router = useRouter();
 
-  const { login } = useAuth();
+  const { user, login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,13 +22,18 @@ export default function Login(props: LoginProps) {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    if (user) {
+      const searchParams = new URLSearchParams(window.location.search);
+      const from = searchParams.get("from") || "/";
+      router.replace(from);
+    }
+  }, [user]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-
-    const searchParams = new URLSearchParams(window.location.search);
-    const from = searchParams.get("from") || "/";
 
     try {
       await toast.promise(
@@ -56,8 +61,6 @@ export default function Login(props: LoginProps) {
           error: (err) => err.message || "Login failed. Please try again.",
         }
       );
-
-      router.push(from);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Login failed. Please try again."
@@ -66,7 +69,6 @@ export default function Login(props: LoginProps) {
       setIsLoading(false);
     }
   };
-
 
   return (
     <div className="min-h-screen w-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">

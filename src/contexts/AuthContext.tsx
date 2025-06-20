@@ -7,14 +7,9 @@ import {
   useEffect,
   ReactNode,
 } from "react";
+import {useRouter} from "next/navigation"
 import { jwtDecode } from "jwt-decode";
-
-type User = {
-  id: string;
-  email: string;
-  name: string;
-  // Add more fields as needed
-};
+import { User } from "@/app/(normal)/courses/[courseId]/assignments/[assignmentId]/submissions/page";
 
 type AuthContextType = {
   user: User | null;
@@ -30,6 +25,7 @@ let logoutTimer: NodeJS.Timeout;
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -54,8 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = (token: string) => {
-    const decodedUser = JSON.parse(atob(token.split(".")[1])); // use jwt-decode lib for safety
-
+    const decodedUser = jwtDecode<User>(token); // Use jwt-decode properly here
     setUser(decodedUser);
     setToken(token);
     localStorage.setItem("token", token);
@@ -68,6 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     document.cookie = "token=; Max-Age=0; path=/";
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    router.push("/login"); 
   };
 
   return (

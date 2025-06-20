@@ -1,76 +1,116 @@
-import { notFound } from 'next/navigation';
+"use client";
 
-const courses = [
-  {
-    id: 1,
-    title: 'Chemistry',
-    instructor: 'Dr. Alan Mendes',
-    year: '2025 A/L',
-    image: 'chemisty.jpg',
-  },
-  {
-    id: 2,
-    title: 'Physics',
-    instructor: 'Prof. Sarah Newton',
-    year: '2025 A/L',
-    image: 'physics.jpg',
-  },
-  {
-    id: 3,
-    title: 'Biology',
-    instructor: 'Dr. Lisa Green',
-    year: '2025 A/L',
-    image: 'biology.jpg',
-  },
-  {
-    id: 4,
-    title: 'Combined Mathematics',
-    instructor: 'Mr. Kevin Tan',
-    year: '2025 A/L',
-    image: 'mathematics.jpg',
-  },
-  {
-    id: 5,
-    title: 'ICT',
-    instructor: 'Mr. Kevin Tan',
-    year: '2025 A/L',
-    image: 'ict.webp',
-  },
-  {
-    id: 6,
-    title: 'Agriculture',
-    instructor: 'Dr. Ethan Fields',
-    year: '2025 A/L',
-    image: 'agriculture.jpg',
-  },
-];
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
-export default async function SpecificCoursePage({ params }: { params: { courseId: string } }) {
-  const values = await params;
-  const courseId = parseInt(values.courseId);
-  const course = courses.find((c) => c.id === courseId);
+interface CourseResponseDTO {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  instructor: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  createdAt: string;
+}
 
-  if (!course) return (
-    <div className="min-h-screen flex items-start justify-center font-poppins">
-      <div className="p-8 max-w-2xl text-center">
-        <h1 className="text-3xl font-bold mb-4">Not Found</h1>
-        <p className="text-lg text-gray-600">
-          Sorry, the course you're looking for doesn't exist or may have been removed.
-        </p>
-      </div>
-    </div>
-  );
+export default function CoursePage() {
+  const params = useParams();
+  const courseId = params?.courseId;
+  const router = useRouter();
+  const { user } = useAuth();
+  const [course, setCourse] = useState<CourseResponseDTO | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!courseId) return;
+
+    const fetchCourse = async () => {
+      try {
+        const promise = fetch(`http://localhost:8080/courses/${courseId}`).then(
+          async (res) => {
+            if (!res.ok) throw new Error("Failed to fetch course");
+            return res.json();
+          }
+        );
+
+        const data = await toast.promise(
+          promise,
+          {
+            loading: "Loading course...",
+            success: "Course loaded!",
+            error: "Failed to load course 😢",
+          },
+          {
+            success: { duration: 2500 },
+            error: { duration: 3500 },
+          }
+        );
+
+        setCourse(data);
+      } catch (err) {
+        console.error("Error fetching course:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourse();
+  }, [courseId]);
+
+  if (loading) {
+    return <div className="p-6">Loading course...</div>;
+  }
+
+  if (!course) {
+    return <div className="p-6 text-red-600">Course not found.</div>;
+  }
+
+  const isInstructor = user?.role === "INSTRUCTOR";
+  const isStudent = user?.role === "STUDENT";
 
   return (
-    <div className="p-8 max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
-      <img src={course.image} alt={course.title} className="w-full h-64 object-cover rounded mb-6" />
-      <p className="text-lg mb-2">
-        {course.instructor}
+    <div className="max-w-6xl px-6 py-8">
+      <h1 className="text-3xl font-bold text-[#00173d] mb-2">{course.title}</h1>
+      <p className="text-gray-600 mb-4">
+        {course.description || "No description provided."}
       </p>
-      <p className="text-md">
-        {course.year}
+      <p className="text-sm text-gray-500 mb-8">
+        Taught by <span className="font-medium">{course.instructor.name}</span>{" "}
+        • {new Date(course.createdAt).toLocaleDateString()}
       </p>
+
+      <div className="bg-white shadow rounded-lg p-6 border mb-10">
+        <h2 className="text-xl font-semibold mb-4">Course Content</h2>
+        <ul className="list-disc list-inside space-y-2 text-gray-800">
+          <li>Java Basics: Data types, Variables, and Operators</li>
+          <li>Object-Oriented Programming with Classes</li>
+          <li>Exception Handling</li>
+          <li>Java Collections Framework</li>
+          <li>Streams and Lambda Expressions</li>
+          <li>Mini Project: Java-based Console App</li>
+        </ul>
+      </div>
+
+      <button
+        onClick={() => router.push(`/courses/${course.id}/assignments`)}
+        className="bg-[#00173d] text-white px-4 py-2 mr-4 rounded hover:bg-blue-700 transition"
+      >
+        View Assignments
+      </button>
+
+      {isInstructor && (
+        <button
+          onClick={() => router.push(`/instructor/courses/${course.id}/manage`)}
+          className="bg-green-700 text-white px-4 py-2 rounded mr-4 hover:bg-green-800 transition"
+        >
+          Manage Course
+        </button>
+      )}
     </div>
   );
 }
